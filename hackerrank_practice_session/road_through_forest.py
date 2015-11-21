@@ -2,23 +2,25 @@
 import copy
 def get_minimum_trees(forest):
     for i in range(len(forest[0])):
-        visited = [[False for x in range(len(forest[0]))] for y in range(len(forest))]
-        navigate(0,i,forest, copy.deepcopy(visited),0)
+        # visited = [[False for x in range(len(forest[0]))] for y in range(len(forest))]
+        visited = set()
+        navigate(0,i,forest, visited,0)
 
 _max_count = 20
 smallest_ones_count = _max_count
 def navigate(row, col, forest, visited, onesCount):
     global smallest_ones_count
-    global smallest_path
     if row < 0 or col< 0 or row>=len(forest) or col>=len(forest[0]):
         return
-    if visited[row][col]:
+    # if visited[row][col]:
+    if (row,col) in visited:
         return
 
 
     if forest[row][col] == 1:
         onesCount+=1
-    visited[row][col] = True
+    # visited[row][col] = True
+    visited.add((row,col))
     
     if onesCount > smallest_ones_count:
         return
@@ -27,15 +29,20 @@ def navigate(row, col, forest, visited, onesCount):
         if smallest_ones_count > onesCount:
             smallest_ones_count = onesCount
         return
+    
+    new_visited = set()
+    for i in visited:
+        new_visited.add(i)
 
-    navigate(row+1, col-1, forest, copy.deepcopy(visited), onesCount)
-    navigate(row+1, col, forest, copy.deepcopy(visited), onesCount)
-    navigate(row+1, col+1, forest, copy.deepcopy(visited), onesCount)
-    navigate(row, col+1, forest, copy.deepcopy(visited), onesCount)
-    navigate(row, col-1, forest, copy.deepcopy(visited), onesCount)
-    # navigate(row-1, col, forest, copy.deepcopy(visited), onesCount)
-    navigate(row-1, col-1, forest, copy.deepcopy(visited), onesCount)
-    navigate(row-1, col+1, forest, copy.deepcopy(visited), onesCount)
+            
+    navigate(row+1, col-1, forest, new_visited , onesCount)
+    navigate(row+1, col,   forest, new_visited, onesCount)
+    navigate(row+1, col+1, forest, new_visited, onesCount)
+    navigate(row, col+1,   forest, new_visited, onesCount)
+    navigate(row, col-1,   forest, new_visited, onesCount)
+    navigate(row-1, col,   forest, new_visited, onesCount)
+    navigate(row-1, col-1, forest, new_visited, onesCount)
+    navigate(row-1, col+1, forest, new_visited, onesCount)
 
     return
 
